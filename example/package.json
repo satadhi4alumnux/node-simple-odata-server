@@ -9,7 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "simple-odata-server": "github:pofider/node-simple-odata-server",
-    "simple-odata-server-nedb": "github:pofider/node-simple-odata-server-nedb"
+    "express": "^4.18.1",
+    "nodemon": "^2.0.19",
+    "simple-odata-server": "github:satadhi4alumnux/node-simple-odata-server",
+    "simple-odata-server-nedb": "github:satadhi4alumnux/node-simple-odata-server-nedb"
   }
 }

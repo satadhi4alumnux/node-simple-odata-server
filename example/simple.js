@@ -1,6 +1,7 @@
 const ODataServer = require('simple-odata-server')
-const Adapter = require('simple-odata-server-nedb')
-const http = require('http')
+const Adapter = require('../../node-simple-odata-server-nedb/index')
+const express = require('express')
+const app = express()
 const Datastore = require('nedb')
 const db = new Datastore({ inMemoryOnly: true })
 
@@ -27,11 +28,20 @@ const model = {
   }
 }
 
-const odataServer = ODataServer('http://localhost:1337')
+const odataServer = ODataServer()
   .model(model)
   .adapter(Adapter(function (es, cb) { cb(null, db) }))
 
-http.createServer(odataServer.handle.bind(odataServer)).listen(1337)
+app.use("/", function (req, res) {
+
+  req.query
+  odataServer.beforeQuery((setName, doc, req, cb) => {
+        console.log(setName, doc);
+        doc['$skiptoken']= 2;
+           cb()
+    });
+  odataServer.handle(req, res);
+});
 
 db.insert({ _id: '1', test: 'a', num: 1, addresses: [{ street: 'a1' }] })
 db.insert({ _id: '2', test: 'b', num: 2, addresses: [{ street: 'a2' }] })
@@ -39,4 +49,6 @@ db.insert({ _id: '3', test: 'c', num: 3 })
 db.insert({ _id: '4', test: 'd', num: 4 })
 db.insert({ _id: '5', test: 'e', num: 5 })
 
-console.log('server running on http://localhost:1337')
+app.listen(1337, () => {
+  console.log('server running on http://localhost:1337')
+})
